@@ -11,6 +11,7 @@ import exception.CrmCustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,7 +25,11 @@ public class AuthServicesImpl implements AuthServices {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
     private JwtServices jwtServices;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public AuthResponseDTO login(LoginDTO loginDTO) throws CrmCustomException {
@@ -47,6 +52,29 @@ public class AuthServicesImpl implements AuthServices {
 
     @Override
     public AuthResponseDTO register(RegisterDTO registerDTO) throws CrmCustomException {
-        return null;
+
+      Optional<User> userobj = userRepository.findByEmailid(registerDTO.getEmail());
+         User userfound = userobj.orElseThrow(()-> new CrmCustomException("this emailID is already exist please try with the diffrent email id"));
+
+         User user = new User();
+
+
+
+         user.setName(registerDTO.getName());
+         user.setEmail(registerDTO.getEmail());
+         user.setRole(Role.valueOf(registerDTO.getRole()));
+         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+
+         userRepository.save(user);
+
+       String token =   jwtServices.genrateToken(user.getEmail(), user.getRole().name());
+
+         AuthResponseDTO authResponseDTO = new AuthResponseDTO();
+
+         authResponseDTO.setRole(user.getRole().name());
+         authResponseDTO.setToken(token);
+         authResponseDTO.setMessage("User Registerd Succefully");
+
+        return authResponseDTO;
     }
 }
