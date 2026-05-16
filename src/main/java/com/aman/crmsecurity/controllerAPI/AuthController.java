@@ -29,6 +29,7 @@ public class AuthController {
          return new ResponseEntity<AuthResponseDTO>(authResponseDTO , HttpStatus.CREATED);
      }
 
+     @PostMapping(value = "/login")
      private  ResponseEntity<AuthResponseDTO>Login(@Valid @RequestBody LoginDTO loginDTO) throws CrmCustomException{
 
         AuthResponseDTO authResponseDTO = authServices.login(loginDTO);
