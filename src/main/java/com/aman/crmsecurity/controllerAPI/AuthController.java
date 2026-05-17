@@ -27,26 +27,18 @@ public class AuthController {
      }
 
      @PostMapping(value = "/login")
-     public   ResponseEntity<AuthResponseDTO>Login(@Valid @RequestBody LoginDTO loginDTO) throws CrmCustomException{
+     public  ResponseEntity<AuthResponseDTO>Login(@Valid @RequestBody LoginDTO loginDTO) throws CrmCustomException{
 
         AuthResponseDTO authResponseDTO = authServices.login(loginDTO);
 
         return  new ResponseEntity<AuthResponseDTO>(authResponseDTO , HttpStatus.OK);
      }
 
-     @GetMapping(value = "/admin/getprofile")
-     public  ResponseEntity<String>forPrfileAPi(){
-        String msg = "you successfully access the api";
 
-        return  new ResponseEntity<String>(msg, HttpStatus.OK);
-     }
 
-    @GetMapping(value = "/manager/getprofile")
-    public  ResponseEntity<String>userPrfileAPi(){
-        String msg = "you successfully access the api";
 
-        return  new ResponseEntity<String>(msg, HttpStatus.OK);
-    }
+
+
 
 
 
