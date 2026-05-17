@@ -34,7 +34,7 @@ public class AuthServicesImpl implements AuthServices {
     @Override
     public AuthResponseDTO login(LoginDTO loginDTO) throws CrmCustomException {
 
-       Optional<User> userobj =  userRepository.findByEmailid(loginDTO.getEmail());
+       Optional<User> userobj =  userRepository.findByEmail(loginDTO.getEmail());
 
         User user = userobj.orElseThrow(() -> new CrmCustomException("user does not exist , please login with diffrent mail id."));
 
@@ -45,7 +45,7 @@ public class AuthServicesImpl implements AuthServices {
        AuthResponseDTO authResponseDTO =  new AuthResponseDTO();
        authResponseDTO.setToken(token);
        authResponseDTO.setRole(user.getRole().name());
-       authResponseDTO.setMessage("the User Register the successfully");
+       authResponseDTO.setMessage("the User Login  successfully");
 
         return authResponseDTO;
     }
@@ -53,9 +53,11 @@ public class AuthServicesImpl implements AuthServices {
     @Override
     public AuthResponseDTO register(RegisterDTO registerDTO) throws CrmCustomException {
 
-      Optional<User> userobj = userRepository.findByEmailid(registerDTO.getEmail());
-         User userfound = userobj.orElseThrow(()-> new CrmCustomException("this emailID is already exist please try with the diffrent email id"));
-
+      Optional<User> userobj = userRepository.findByEmail(registerDTO.getEmail());
+//         User userfound = userobj.orElseThrow(()-> new CrmCustomException("this emailID is does not  exist please try with the diffrent email id"));
+          if(userobj.isPresent()){
+              throw  new CrmCustomException("this User is alrady present, please try with another email id");
+          }
          User user = new User();
 
 
