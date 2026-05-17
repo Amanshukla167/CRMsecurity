@@ -19,7 +19,7 @@ public class JwtServices {
         return Keys.hmacShaKeyFor(bytes);
     }
 
-    private long Experication = 1000*60*15;
+    private long Experication = 1000*60*60;
 
 
     public  String genrateToken(String email, String role){
